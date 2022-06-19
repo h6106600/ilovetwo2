@@ -15,8 +15,8 @@ class CreateDateLoginLogsTable extends Migration
     {
         Schema::create('date_login_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('phone')->nullable();
             $table->string('identity')->nullable();
+            $table->string('phone')->nullable();
             $table->string('status')->nullable();
             $table->string('ip_address')->nullable();
             $table->timestamps();

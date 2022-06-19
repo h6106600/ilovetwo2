@@ -29,7 +29,7 @@
 </div>
 
 <div class="jumbotron text-center">
-    <h2><strong>會員暱稱：</strong></h2>
+    <h2><strong>會員暱稱：{{ $data['username'] }}</strong></h2>
 </div>
 
 <div class="container">

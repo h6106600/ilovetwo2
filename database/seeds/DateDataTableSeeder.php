@@ -13,9 +13,9 @@ class DateDataTableSeeder extends Seeder
     {
         $ary = [
             [  
-                'phone'=>'0983610660',
                 'username'=>'luke',
                 'identity'=>'a123456789',
+                'phone'=>'0912345678',
                 'gender'=>'m',
                 'consultant'=>'sam',
                 'data_url'=>'https://drive.google.com/drive/folders/luke',

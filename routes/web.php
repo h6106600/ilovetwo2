@@ -12,7 +12,7 @@
 */
 
 Route::group(['prefix'=>'date'], function(){
-    Route::get('/', 'TestController@index');
+    Route::get('/', 'DateController@login');
     Route::get('/login', 'DateController@login')->name('date.login');
     Route::post('/login_post', 'DateController@login_post')->name('date.login_post');
     Route::get('/data', 'DateController@data')->name('date.data');

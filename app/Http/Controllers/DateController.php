@@ -38,14 +38,14 @@ class DateController extends Controller
         }
 
         $login = DateData::where([
-            'phone' => $account,
-            'identity' => $password
+            'identity' => $account,
+            'phone' => $password
         ])->first();
 
         if($login != null){
             $DateLoginLog = new DateLoginLog();
-            $DateLoginLog->phone = $account;
-            $DateLoginLog->identity = $password;
+            $DateLoginLog->identity = $account;
+            $DateLoginLog->phone = $password;
             $DateLoginLog->ip_address = $ip_address;
             $DateLoginLog->status = 'success';
             $DateLoginLog->save();
@@ -53,8 +53,8 @@ class DateController extends Controller
             return redirect('/date/data');
         }else{
             $DateLoginLog = new DateLoginLog();
-            $DateLoginLog->phone = $account;
-            $DateLoginLog->identity = $password;
+            $DateLoginLog->identity = $account;
+            $DateLoginLog->phone = $password;
             $DateLoginLog->ip_address = $ip_address;
             $DateLoginLog->status = 'fail';
             $DateLoginLog->save();
@@ -70,10 +70,9 @@ class DateController extends Controller
         }
 
         $account = Session::get('account'); 
-        $data = DateData::where('phone', $account)->get();
-        dd($data[0]['username']);
+        $data = DateData::where('identity', $account)->get()->first();
 
-        return view('date.data');
+        return view('date.data', [ 'data' => $data  ]);
     }
 
     public function logout()

@@ -16,9 +16,9 @@ class CreateDateDataTable extends Migration
         Schema::create('date_data', function (Blueprint $table) {
      
             $table->bigIncrements('id');
-            $table->string('phone')->unique();//手機號(帳號)
             $table->string('username')->unique();//暱稱
-            $table->string('identity');//身分證(密碼)
+            $table->string('identity')->unique();//身分證(密碼)
+            $table->string('phone')->unique();//手機號(帳號)
             $table->string('gender');//性別
             $table->string('consultant');//顧問
             $table->string('data_url');//資料連結
