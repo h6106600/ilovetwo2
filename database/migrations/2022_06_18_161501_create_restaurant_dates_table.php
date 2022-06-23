@@ -15,6 +15,7 @@ class CreateRestaurantDatesTable extends Migration
     {
         Schema::create('restaurant_dates', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('datetime');
             $table->timestamps();
         });
     }

@@ -75,11 +75,45 @@ class DateController extends Controller
         return view('date.data', [ 'data' => $data  ]);
     }
 
+    public function invitation()
+    {
+        
+        return view('date.invitation');
+    }
+
+    public function invitation_post()
+    {
+        
+        
+    }
+
+    public function respond()
+    {
+       
+        return view('date.respond');
+    }
+
+    public function respond_post()
+    {
+        
+        
+    }
+
+    public function restaurant()
+    {
+       
+        return view('date.restaurant');
+    }
+
     public function logout()
     {
         Session::forget('account');
         return redirect('/date/login');
     }
 
+    public function test()
+    {
+       echo 'test';
+    }
 
 }

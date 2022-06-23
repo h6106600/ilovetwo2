@@ -15,6 +15,11 @@ class CreateInvitationsTable extends Migration
     {
         Schema::create('invitations', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('identity');
+            $table->string('type');
+            $table->string('chat_option')->nullable();
+            $table->string('restaurant')->nullable();
+            $table->string('datetime')->nullable();
             $table->timestamps();
         });
     }

@@ -15,6 +15,8 @@ class CreateRespondsTable extends Migration
     {
         Schema::create('responds', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('invitation_id')->unique();
+            $table->string('respond')->nullable();
             $table->timestamps();
         });
     }
