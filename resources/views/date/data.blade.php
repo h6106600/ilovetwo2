@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>愛樂兔排約會員</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel = "icon" type = "image/png" href = "name-of-image.png">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+@include('date.components.head')
 
     <style>
         .jumbotron{
@@ -42,20 +32,35 @@
 		<h5>Step4 . 週五：我們會公布約會結果與時間。	</h5>
 		<br>
 
+        <a class="btn btn-primary" href="/date/invitation"
+        style="width:150px;background-color:#c3a367;color:#2b2b2b;border:0px;font-weight:900;">
+            約會邀請表
+        </a>
+
+        <a class="btn btn-primary" href="/date/respond"
+        style="width:150px;background-color:#c3a367;color:#2b2b2b;border:0px;font-weight:900;">
+            約會回應表
+        </a>
         
         <br><br>
     </div>
     <div class="col-sm-12">
         <h3>推播會員 :</h3>
-       
+        @foreach($data['push_data'] as $value)
         <div>
-            <span></span>&nbsp;&nbsp;
+            <span>{{ $value['username'] }}</span>&nbsp;&nbsp;
+            <br>
             <a href="" target="_blank"
             style="color:#c3a367;">
-                詳細資料 :
+                詳細資料 : {{ $value['data_url'] }}
+            </a>
+            <br>
+            <a href="" target="_blank"
+            style="color:#c3a367;">
+                刪減版資料 : {{ $value['data_url_simple'] }}
             </a>
         </div>&nbsp;
-       
+        @endforeach
     </div>
   </div>
 </div>

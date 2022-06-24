@@ -15,7 +15,7 @@ class InvitationController extends AdminController
      *
      * @var string
      */
-    protected $title = '排約邀約表';
+    protected $title = '約會邀約表';
 
     /**
      * Make a grid builder.
@@ -26,7 +26,8 @@ class InvitationController extends AdminController
     {
         $grid = new Grid(new Invitation);
 
-        $grid->column('identity', __('身分證'));
+        $grid->column('identity', __('會員名稱'));
+        $grid->column('invitation_identity', __('邀請對象'));
         $grid->column('type', __('類型'));
         $grid->column('chat_option', __('聊天選項'));
         $grid->column('restaurant', __('餐廳'));
@@ -85,7 +86,8 @@ class InvitationController extends AdminController
     {
         $form = new Form(new Invitation);
 
-        $form->text('identity', __('身分證'));
+        $form->text('identity', __('會員名稱'));
+        $form->text('invitation_identity', __('邀請對象'));
         $form->text('type', __('類型'));
         $form->text('chat_option', __('聊天選項'));
         $form->text('restaurant', __('餐廳'));

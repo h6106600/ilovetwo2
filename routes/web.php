@@ -23,7 +23,7 @@ Route::group(['prefix'=>'date'], function(){
     Route::get('/logout', 'DateController@logout')->name('date.logout');
     Route::get('/restaurant', 'DateController@restaurant')->name('date.restaurant');
     // Route::get('/pair_time', 'DateController@pair_time');
-    Route::get('/test', 'DateController@test')->name('date.test');
+    // Route::get('/test', 'DateController@test')->name('date.test');
 }); 
     
 Route::group(['prefix'=>'activity'], function(){

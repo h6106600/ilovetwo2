@@ -16,6 +16,7 @@ class CreateInvitationsTable extends Migration
         Schema::create('invitations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('identity');
+            $table->string('invitation_identity');
             $table->string('type');
             $table->string('chat_option')->nullable();
             $table->string('restaurant')->nullable();

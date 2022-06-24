@@ -15,7 +15,7 @@ class RespondController extends AdminController
      *
      * @var string
      */
-    protected $title = '排約回應表';
+    protected $title = '約會回應表';
 
     /**
      * Make a grid builder.
