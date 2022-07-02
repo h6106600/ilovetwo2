@@ -17,6 +17,7 @@ class CreateRestaurantsTable extends Migration
             $table->bigIncrements('id');
             $table->string('place');
             $table->string('url');
+            $table->string('qualification');
             $table->timestamps();
         });
     }

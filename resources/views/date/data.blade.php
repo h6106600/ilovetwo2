@@ -50,15 +50,15 @@
         <div>
             <span>{{ $value['username'] }}</span>&nbsp;&nbsp;
             <br>
-            <a href="" target="_blank"
-            style="color:#c3a367;">
-                詳細資料 : {{ $value['data_url'] }}
-            </a>
-            <br>
-            <a href="" target="_blank"
-            style="color:#c3a367;">
-                刪減版資料 : {{ $value['data_url_simple'] }}
-            </a>
+            @if($data['show'] == 'd' || empty($value['data_url_simple']))
+                <a href="{{ $value['data_url'] }}" target="_blank" style="color:#c3a367;">
+                    {{ $value['data_url'] }}
+                </a>
+            @else
+                <a href="{{ $value['data_url_simple'] }}" target="_blank" style="color:#c3a367;">
+                    {{ $value['data_url_simple'] }}
+                </a>
+            @endif
         </div>&nbsp;
         @endforeach
     </div>

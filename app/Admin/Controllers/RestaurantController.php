@@ -29,10 +29,19 @@ class RestaurantController extends AdminController
         //$grid->column('id', __('ID'))->sortable();
         $grid->column('place', __('餐廳地點'));
         $grid->column('url', __('餐廳介紹連結'));
+        $grid->column('qualification', __('黃金會員限定'))->display(function($val){
+            if($val == 'yes'){
+                return '是';
+            }
+            return '否';
+        });
         // $grid->column('created_at', __('建立時間'));
         // $grid->column('updated_at', __('更新時間'));
         $grid->disableExport();
         $grid->disableColumnSelector();
+        $grid->filter(function($filter){
+            $filter->disableIdFilter();
+        });
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableView();
             //$actions->disableEdit();
@@ -82,6 +91,7 @@ class RestaurantController extends AdminController
         //$form->display('id', __('ID'));
         $form->text('place', __('餐廳地點'));
         $form->text('url', __('餐廳介紹連結'));
+        $form->radio('qualification', __('黃金會員限定'))->options([ 'yes' => '是', 'no' => '否' ]);
         // $form->display('created_at', __('建立時間'));
         // $form->display('updated_at', __('更新時間'));
         $form->tools(function (Form\Tools $tools) {

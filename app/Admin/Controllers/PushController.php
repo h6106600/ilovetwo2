@@ -47,12 +47,12 @@ class PushController extends AdminController
             $result = implode("、", $result);
             return $result;
         });
-        $grid->column('pushes_user_latest', __('最新推播的會員'))->display(function($data){
-            $ary = explode('、', $data);
-            $result = DateData::whereIn('identity', $ary)->pluck('username')->toArray();
-            $result = implode("、", $result);
-            return $result;
-        });
+        // $grid->column('pushes_user_latest', __('最新推播的會員'))->display(function($data){
+        //     $ary = explode('、', $data);
+        //     $result = DateData::whereIn('identity', $ary)->pluck('username')->toArray();
+        //     $result = implode("、", $result);
+        //     return $result;
+        // });
         $grid->column('pushes_user_excluded', __('排除的會員'))->display(function($data){
             $ary = explode('、', $data);
             $result = DateData::whereIn('identity', $ary)->pluck('username')->toArray();
@@ -62,6 +62,10 @@ class PushController extends AdminController
 
         $grid->filter(function($filter){
             $filter->disableIdFilter();
+            $filter->where(function ($query) {
+                $identity = DateData::where('username', $this->input)->pluck('identity')->first();    
+                $query->whereIn('identity', [$identity]);
+            }, '會員名稱');
         });
 
         $grid->disableExport();
@@ -117,15 +121,15 @@ class PushController extends AdminController
         $form = new Form(new Push);
 
         if($form->isCreating()){
-            $form->text('identity', __('會員名稱'));
+            $form->select('identity', __('會員名稱'))->options(DateData::pluck('username','identity')->toArray());
         };
         if($form->isEditing()){
-            $form->display('identity', __('會員名稱'));
+            $form->select('identity', __('會員名稱'))->options(DateData::pluck('username','identity')->toArray())->readonly();
         };
 
         $form->text('pushes_user', __('排約會員'));
         $form->text('pushes_user_new', __('要推播的會員'));
-        $form->text('pushes_user_latest', __('最新推播的會員'));
+        //$form->text('pushes_user_latest', __('最新推播的會員'));
         $form->text('pushes_user_excluded', __('排除的會員'));
       
         $form->tools(function (Form\Tools $tools) {

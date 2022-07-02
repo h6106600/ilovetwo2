@@ -35,6 +35,9 @@ class RestaurantDateController extends AdminController
         // $grid->column('updated_at', __('更新時間'));
         $grid->disableExport();
         $grid->disableColumnSelector();
+        $grid->filter(function($filter){
+            $filter->disableIdFilter();
+        });
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableView();
             //$actions->disableEdit();

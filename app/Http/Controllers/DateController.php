@@ -13,9 +13,17 @@ use App\Models\RestaurantDate;
 use App\Models\VideoDate;
 use App\Models\Invitation;
 use App\Models\Respond;
+use App\Services\PushRuleService;
 
 class DateController extends Controller
 {
+    private $pushRuleService;
+
+    public function __construct(PushRuleService $pushRuleService)
+    {
+        $this->pushRuleService = $pushRuleService;
+    }
+
     public function login()
     {
         if(Session::has('account')){
@@ -72,7 +80,7 @@ class DateController extends Controller
     public function data()
     {
         if(!Session::has('account')){
-            return redirect('/login');
+            return redirect('/date/login');
         }
 
         $identity = Session::get('account'); 
@@ -81,11 +89,26 @@ class DateController extends Controller
         //會員名稱
         $data['username'] = DateData::where('identity', $identity)->pluck('username')->first();
 
-        //推播名單
-        $push_data = Push::where('identity', $identity)->pluck('pushes_user')->first();
-        $push_data = explode('、', $push_data);
-        $data['push_data'] = DateData::whereIn('identity', $push_data)->get(['username','data_url','data_url_simple'])->toArray();
- 
+        //推播對象
+        $data['push_data'] = $this->pushRuleService->pushMember($identity);
+
+        //會員資料連結顯示
+        $check = DateData::where('identity', $identity)->get(['gender','plan'])->toArray();
+        if($check[0]['gender'] == 'm'){
+            if($check[0]['plan'] == 'G' || $check[0]['plan'] == 'C' || $check[0]['plan'] == 'D'){
+                $data['show'] = 'd';
+            }else{
+                $data['show'] = 's';
+            }
+        }
+        if($check[0]['gender'] == 'g'){
+            if($check[0]['plan'] == 'D'){
+                $data['show'] = 'd';
+            }else{
+                $data['show'] = 's';
+            }
+        }
+        
 
         return view('date.data', [ 'data' => $data ]);
     }
@@ -93,25 +116,28 @@ class DateController extends Controller
     public function invitation()
     {
         if(!Session::has('account')){
-            return redirect('/login');
+            return redirect('/date/login');
         }
         
         $identity = Session::get('account');
         $data = [];
 
-        //排約對象
-        $push_data = Push::where('identity', $identity)->pluck('pushes_user')->first();
-        $push_data = explode('、', $push_data);
-        $data['push_data'] = DateData::whereIn('identity', $push_data)->get(['identity','username','data_url','data_url_simple'])->toArray();
-
         //約會餐廳
-        $data['restaurant'] = Restaurant::get(['place', 'url'])->toArray();
-
+        $plan = DateData::where('identity', $identity)->pluck('plan')->first();
+        if($plan != 'G'){
+            $data['restaurant'] = Restaurant::where('qualification', 'no')->get(['place', 'url'])->toArray();
+        }else{
+            $data['restaurant'] = Restaurant::get(['place', 'url'])->toArray();
+        }
+       
         //顯示餐廳約會時間
         $data['restaurant_date'] = RestaurantDate::get(['datetime'])->toArray();
 
         //顯示視訊約會時間
         $data['video_date'] = VideoDate::get(['datetime'])->toArray();
+
+        //推播對象
+        $data['push_data'] = $this->pushRuleService->pushMember($identity);
 
         return view('date.invitation', [ 'data' => $data ]);
     }
@@ -119,7 +145,7 @@ class DateController extends Controller
     public function invitation_post(Request $request)
     {
         if(!Session::has('account')){
-            return redirect('/login');
+            return redirect('/date/login');
         }
 
         $identity = Session::get('account');
@@ -203,42 +229,71 @@ class DateController extends Controller
     public function respond()
     {
         if(!Session::has('account')){
-            return redirect('/login');
+            return redirect('/date/login');
         }
 
         $identity = Session::get('account');
         $data = [];
         
         $invitation_data = Invitation::where('invitation_identity', $identity)->get()->toArray();
-
         foreach($invitation_data as $key => $value){
-            $username = DateData::where('identity', $value['identity'])->pluck('username')->first();
-            $value['username'] = $username;
+            $data = DateData::where('identity', $value['identity'])->get(['username', 'data_url', 'data_url_simple'])->toArray();
+            $invitation_data[$key]['username'] = $data[0]['username'];
+            $invitation_data[$key]['data_url'] = $data[0]['data_url'];
+            $invitation_data[$key]['data_url_simple'] = $data[0]['data_url_simple'];
+        }
+        $data['invitation_data'] = $invitation_data;
+
+        //會員資料連結顯示
+        $check = DateData::where('identity', $identity)->get(['gender','plan'])->toArray();
+        if($check[0]['gender'] == 'm'){
+            if($check[0]['plan'] == 'G' || $check[0]['plan'] == 'C' || $check[0]['plan'] == 'D'){
+                $data['show'] = 'd';
+            }else{
+                $data['show'] = 's';
+            }
+        }
+        if($check[0]['gender'] == 'g'){
+            if($check[0]['plan'] == 'D'){
+                $data['show'] = 'd';
+            }else{
+                $data['show'] = 's';
+            }
         }
 
-        dd($invitation_data);
 
-        $data['invitation'] = 0;
+
         return view('date.respond', [ 'data' => $data ]);
     }
 
     public function respond_post(Request $request)
     {
         if(!Session::has('account')){
-            return redirect('/login');
+            return redirect('/date/login');
         }
 
         $identity = Session::get('account');
-        
+
+        $input = $request->input();
+
+        foreach($input['id'] as $key => $value){
+            if(!isset($input['respond'.$key])){
+                continue;
+            }
+            $respond = implode("、", $request->input()['respond'.$key]);
+            Invitation::where('id', $value)->update(['respond' => $respond]);
+        }
+    
+        return redirect('/date/data');
     }
 
     public function restaurant()
     {
         if(!Session::has('account')){
-            return redirect('/login');
+            return redirect('/date/login');
         }
         $restaurant = Restaurant::get(['place', 'url'])->toArray();
-        return view('date.restaurant' ,[ 'restaurant' => $restaurant ]);
+        return view('date.restaurant', [ 'restaurant' => $restaurant ]);
     }
 
     public function logout()
@@ -249,7 +304,30 @@ class DateController extends Controller
 
     public function test()
     {
-       echo 'test';
+        if(!Session::has('account')){
+            return redirect('/date/login');
+        }
+        $identity = Session::get('account');
+        $data = Invitation::whereRaw("respond IS NOT NULL 
+                            AND result IS NULL 
+                            AND identity = '{$identity}' 
+                            ORDER BY LENGTH(respond) ASC")         
+                            ->get([
+                                'type',
+                                'identity',
+                                'invitation_identity',
+                                'respond',
+                                'result'
+                            ])
+                            ->toArray();
+        dd($data);
+    }
+
+    public function pair_time()
+    {
+
+        \Log::info('排約資料已設定');
+        return redirect()->back();
     }
 
 }

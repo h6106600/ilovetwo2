@@ -26,7 +26,6 @@ class CreateDateDataTable extends Migration
             $table->string('plan')->nullable();//方案別
             $table->string('live_place')->nullable();//居住地
             $table->string('birth_place')->nullable();//出身地
-            $table->string('for_light_plan')->nullable();//輕方案會員能看到
             $table->string('record')->nullable();//紀錄
             $table->timestamps();
 

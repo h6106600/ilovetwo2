@@ -17,28 +17,30 @@
     <a href="/date/data" class="btn btn-primary">回上頁</a>
 </div>
 <div class="jumbotron text-center">
-    <h2><strong>約會邀請表</strong></h2>
+    <h2><strong>約會時間表</strong></h2>
 </div>
     <div class="container">
+        @if ($errors->any())
+            <div class="text-center">
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        @endif
+        @if (count($data['push_data']) < 1)
+            <div class="text-center">
+                <h2 style="color:red;">目前沒有可排約的對象</h2>
+            </div>
+        @endif
         <div class="row">
-            <div class="col-md-12">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                @if(count($data['push_data']) < 1)
-                    <br>
-                    <h2 style="color:red;text-align:center;">目前沒有可排約的對象</h2>
-                    <br>
-                @else
+                @if (count($data['push_data']) >= 1)
+                <div class="offset-md-4 col-md-8">
                 <form action="/date/invitation_post" method="post" id="invitation_form">
                     @csrf
-                        
                         <div class="form-group">
                             <h5>選擇約會形式:</h5>
                             <div class="form-check-inline">
@@ -71,11 +73,10 @@
                             </label>
                             </div>
                         </div>
-
+                   
                         <div class="form-group" id="restaurant" >
                             <label for="date_restaurant">約會餐廳:</label>&emsp;<a href="/date/restaurant"> >>>>前往查看餐廳介紹</a>
-                            
-                            <select class="form-control" id="date_restaurant" name="date_restaurant">
+                            <select class="form-control" id="date_restaurant" name="date_restaurant" style="max-width:500px;">
                                 <option value="1">請選擇</option>
                                 @foreach($data['restaurant'] as $value)
                                     <option value="{{ $value['place'] }}">{{ $value['place'] }}</option>
@@ -132,7 +133,7 @@
 
                         <div class="form-group" id="push_user">
                             <h5>選擇排約對象 : </h5>
-                            @foreach($data['push_data'] as $value)
+                            @foreach($data['push_data'] as $value) 
                             <div class="form-check-inline">
                                 <label class="form-check-label">
                                     <input type="checkbox" class="form-check-input" name="push_user[]"  value="{{ $value['identity'] }}">
@@ -150,7 +151,7 @@
                         </div>
                     @endif
                 </form>
-            </div>
+                </div>
         </div>
     </div>
 <br><br>
@@ -161,7 +162,7 @@
         $("#datetime2").hide();
         $("#restaurant").hide();
         $("#chat_option").hide();
-        $("#push_user").hide();
+        //$("#push_user").hide();
         $("#invitation_form").on('submit', function(e){
             if (!$('input[name="type"]').is(':checked')) {
                 e.preventDefault();
@@ -176,10 +177,10 @@
                     e.preventDefault();
                     alert('未勾選視訊約會時間');
                 }
-                if (!$('input[name="push_user[]"]').is(':checked')) {
-                    e.preventDefault();
-                    alert('未勾選排約對象');
-                }
+                // if (!$('input[name="push_user[]"]').is(':checked')) {
+                //     e.preventDefault();
+                //     alert('未勾選排約對象');
+                // }
             }
             if($("#type2").is(':checked')){
                 if ($("#date_restaurant").val() == "1") {
@@ -190,10 +191,10 @@
                     e.preventDefault();
                     alert('未勾選餐廳約會時間');
                 }
-                if (!$('input[name="push_user[]"]').is(':checked')) {
-                    e.preventDefault();
-                    alert('未勾選排約對象');
-                }
+                // if (!$('input[name="push_user[]"]').is(':checked')) {
+                //     e.preventDefault();
+                //     alert('未勾選排約對象');
+                // }
             }
         });
         $('input[name="type"]').change(function() {
@@ -202,14 +203,14 @@
                 $("#datetime").show();
                 $("#restaurant").hide();
                 $("#chat_option").show();
-                $("#push_user").show();
+                //$("#push_user").show();
             }
             if ($(this).is(':checked') && $(this).val() == "type2") {
                 $("#datetime").hide();
                 $("#datetime2").show();
                 $("#restaurant").show();
                 $("#chat_option").hide();
-                $("#push_user").show();
+                //$("#push_user").show();
             }
         });
     });

@@ -21,6 +21,8 @@ class CreateInvitationsTable extends Migration
             $table->string('chat_option')->nullable();
             $table->string('restaurant')->nullable();
             $table->string('datetime')->nullable();
+            $table->string('respond')->nullable();
+            $table->string('result')->nullable();
             $table->timestamps();
         });
     }

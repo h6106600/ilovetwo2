@@ -31,12 +31,19 @@ class DateDataController extends AdminController
         $grid->column('username', __('會員名稱'));
         $grid->column('identity', __('身分證'));
         $grid->column('phone', __('手機號'));
-        $grid->column('gender', __('性別'));
+        $grid->column('gender', __('性別'))->display(function($data){
+            if($data == 'm'){
+                return '男';
+            }
+            if($data == 'g'){
+                return '女';
+            }
+            return '';
+        });
         $grid->column('consultant', __('顧問'));
         $grid->column('plan', __('方案別'));
         $grid->column('live_place', __('居住地'));
         $grid->column('birth_place', __('出生地'));
-        $grid->column('for_light_plan', __('輕方案可看'));
         $grid->column('data_url', __('資料連結'));
         $grid->column('data_url_simple', __('資料連結刪減版'));
         $grid->column('record', __('紀錄'));
@@ -47,8 +54,16 @@ class DateDataController extends AdminController
         $grid->filter(function($filter){
 
             $filter->disableIdFilter();
-          
-
+            $filter->like('username', '會員名稱');
+            $filter->like('identity', '身分證');
+            $filter->like('phone', '手機號');
+            $filter->equal('gender', '性別')->radio([
+                'm'  => '男',
+                'g'  => '女',
+            ]);
+            $filter->equal('consultant', '顧問');
+            $filter->equal('live_place', '居住地');
+            $filter->equal('birth_place', '出生地');
         });
 
         $grid->disableExport();
@@ -97,16 +112,15 @@ class DateDataController extends AdminController
     {
         $form = new Form(new DateData);
 
-        $form->display('id', __('ID'));
+        //$form->display('id', __('ID'));
         $form->text('username', __('會員名稱'));
         $form->text('identity', __('身分證'));
         $form->text('phone', __('手機號'));
-        $form->text('gender', __('性別'));
+        $form->radio('gender', __('性別'))->options(['m' => '男', 'g'=> '女']);
         $form->text('consultant', __('顧問'));
         $form->text('plan', __('方案別'));
         $form->text('live_place', __('居住地'));
         $form->text('birth_place', __('出生地'));
-        $form->text('for_light_plan', __('輕方案可看'));
         $form->text('data_url', __('資料連結'));
         $form->text('data_url_simple', __('資料連結刪減版'));
         $form->text('record', __('紀錄'));

@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/', 'DateController@login');
 Route::group(['prefix'=>'date'], function(){
     Route::get('/', 'DateController@login');
     Route::get('/login', 'DateController@login')->name('date.login');
@@ -22,8 +22,8 @@ Route::group(['prefix'=>'date'], function(){
     Route::post('/respond_post', 'DateController@respond_post')->name('date.respond_post');
     Route::get('/logout', 'DateController@logout')->name('date.logout');
     Route::get('/restaurant', 'DateController@restaurant')->name('date.restaurant');
-    // Route::get('/pair_time', 'DateController@pair_time');
-    // Route::get('/test', 'DateController@test')->name('date.test');
+    Route::get('/pair_time', 'DateController@pair_time');
+    Route::get('/test', 'DateController@test')->name('date.test');
 }); 
     
 Route::group(['prefix'=>'activity'], function(){
